@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>LED Dashboard</title>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<link rel="stylesheet" href="../static/index.css">
+		<link rel="stylesheet" href="../static/spectrum.css">
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+		<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.js" defer></script>
+		<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" defer></script>
+		<script type="text/javascript" src="../static/index.js" defer></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous" defer></script>
+		<script src="../static/spectrum.js" defer></script>
+		<script src="../static/spectrum2.js" defer></script>
+	</head>
+	<body class="ui-widget-content" style="border:0;">
+		<div role="navigation" id="topmenu">
+            <ul class="nav nav-pills nav-justified">
+                <li id="b2" role="presentation"><a>COLOR</a></li>
+                <li id="b3" role="presentation"><a>Sleep Timer</a></li>
+            </ul>
+        </div>
+        <div>
+			<div class="pane" id="pane2">
+                <input type='text' id="full"/>
+                <div id="red"></div>
+                <div id="green"></div>
+                <div id="blue"></div>
+                <div id="swatch" class="ui-widget-content ui-corner-all"></div>
+                <div class="btn-group-vertical" role="group">
+                    <button id="soft" type="button" class="btn btn-primary btn-lg">
+                        Software Input
+                    </button>
+                    <button id="hard" type="button" class="btn btn-default btn-lg">
+                        Hardware Input
+                    </button>
+                </div>
+			</div>
+
+			<div class="pane" id="pane3">
+			</div>
+			
+		</div>
+	</body>
+</html>
