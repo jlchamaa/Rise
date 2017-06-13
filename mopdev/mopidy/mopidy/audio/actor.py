@@ -6,6 +6,7 @@ import os
 import threading
 import requests
 import pykka
+import math 
 
 from mopidy import exceptions
 from mopidy.audio import tags as tags_lib, utils
@@ -178,9 +179,10 @@ class SoftwareMixer(object):
 class _Handler(object):
 
     def __init__(self, audio):
-        self.cLowend=0
-        self.cMidrange=0
-        self.cHighend=0
+        self.cLowend=14000
+        self.cMidrange=1
+        self.cHighend=1
+        self.iterations=1
         self._audio = audio
         self._element = None
         self._pad = None
@@ -233,28 +235,37 @@ class _Handler(object):
             # "banana"
             s = msg.get_structure()
             if s.get_name()=='spectrum':
+                self.iterations+=1
                 mystring = s.to_string()
                 rawSpectrum=re.findall('\-\d{1,2}',mystring,0)
-                self.cLowend=max(0,self.cLowend-20)
-                self.cMidrange=max(0,self.cMidrange-20)
-                self.cHighend=max(0,self.cHighend-20)
-                lowend=0
-                midrange=0
-                highend=0
-                for i in range(0,6):
-                    lowend+=int(rawSpectrum[i])+50
+                lowend=1
+                midrange=1
+                highend=1
+                #bottom=self.iterations/300;
+                #if self.iterations % 300 == 0:
+                 #   print bottom
+                  #  self.cLowend=1
+                for i in range(0,3):
+                    sample=pow(10,(int(rawSpectrum[i])+50)/(1.0*20))
+                    lowend+=sample*sample
                 if self.cLowend < lowend:
                     self.cLowend=lowend
-                for i in range(7,50):
-                    midrange+=int(rawSpectrum[i])+50
+                red= int(255*lowend/self.cLowend)
+                for i in range(4,7):
+                    sample=pow(10,(int(rawSpectrum[i])+50)/(1.0*20))
+                    midrange+=sample*sample
                 if self.cMidrange < midrange:
                     self.cMidrange=midrange
-                for i in range(51,100):
-                    highend+=int(rawSpectrum[i])+50
+                green=int(255*midrange/self.cMidrange)
+                for i in range(8,30):
+                    sample=pow(10,(int(rawSpectrum[i])+50)/(1.0*20))
+                    highend+=sample*sample
                 if self.cHighend < highend:
                     self.cHighend=highend
-                payload={'r':min(self.cLowend,255),'g':min(self.cMidrange,255),'b':min(self.cHighend,255),'s':1}
+                blue=int(255*highend/self.cHighend)
+                payload={'r':red,'g':green,'b':blue,'s':1}
                 requests.get("http://127.0.0.1:5000/apply",payload)
+                print self.cLowend
             if GstPbutils.is_missing_plugin_message(msg):
                 self.on_missing_plugin(msg)
         elif msg.type == Gst.MessageType.STREAM_START:

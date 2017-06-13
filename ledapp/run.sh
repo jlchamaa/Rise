@@ -1,4 +1,4 @@
-cd ~/Desktop/LED-SuperController/Downsize_Update/ledapp/
+cd ~/Rise/ledapp/
 . venv/bin/activate
 export FLASK_APP=ledapp.py
 export PYTHONPATH=$PYTHONPATH:$(pwd)

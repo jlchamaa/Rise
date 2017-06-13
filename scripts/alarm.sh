@@ -1,4 +1,5 @@
-cd ~/Rise
+amixer set PCM -- 100%
+cd ~/Rise/scripts
 bright=( 0 1 2 3 4 5 7 9 12 15 18 22 27 32 38 44 51 58 67 76 86 96 108 120 134 148 163 180 197 216 235 255 )
 delay=60
 step=1
@@ -15,7 +16,7 @@ bash apply.sh ${bright[step]}
 sleep $delay
 step=$[$step+1]
 done
-mpc clear
+mpc volume 100
 bash apply.sh 0
 times=0
 while [ $times -lt 3 ];
@@ -23,3 +24,4 @@ do
 bash flash.sh
 times=$[$times+1]
 done
+bash apply.sh 100

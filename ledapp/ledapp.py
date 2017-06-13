@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 @app.route("/")
 def hello():
+    print "hello"
     global hardware
     hardware=1
     global on
@@ -11,9 +12,17 @@ def hello():
     if 'ser' not in locals():
         global ser
         ser = serial.Serial('/dev/ttyUSB0', 38400)
-        return render_template('ui.html')
+        if 'mycolor' not in globals():
+            global mycolor
+            mycolor="#000000"
+            print "notmycolor"
+        print "notmyser"
+        print mycolor
+    return render_template('ui.html',color=mycolor)
+
 @app.route("/apply")
 def application():
+    mycolor="#22"
     hardware=0
     red=int(request.args.get('r'))
     green=int(request.args.get('g'))
@@ -47,4 +56,5 @@ def supplication():
         new=1
     return jsonify(red=r,green=g,blue=b,info=new)
 if __name__ == "__main__":
-    app.run(processes=2)
+    app.run(processes=3)
+    mycolor="#045678"
