@@ -1,5 +1,5 @@
-from __future__ import absolute_import, unicode_literals
-
+from __future__ import absolute_import, unicode_literals, print_function
+import sys
 import re
 import logging
 import os
@@ -15,6 +15,8 @@ from mopidy.audio.listener import AudioListener
 from mopidy.internal import deprecation, process
 from mopidy.internal.gi import GObject, Gst, GstPbutils
 
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 logger = logging.getLogger(__name__)
 
@@ -237,35 +239,32 @@ class _Handler(object):
             if s.get_name()=='spectrum':
                 self.iterations+=1
                 mystring = s.to_string()
-                rawSpectrum=re.findall('\-\d{1,2}',mystring,0)
+                eprint(mystring)
+                #return
+                rawspectrum=re.findall('\-\d{1,2}',mystring,0)
                 lowend=1
                 midrange=1
                 highend=1
-                #bottom=self.iterations/300;
-                #if self.iterations % 300 == 0:
-                 #   print bottom
-                  #  self.cLowend=1
                 for i in range(0,3):
-                    sample=pow(10,(int(rawSpectrum[i])+50)/(1.0*20))
+                    sample=pow(10,(int(rawspectrum[i])+50)/(1.0*20))
                     lowend+=sample*sample
                 if self.cLowend < lowend:
                     self.cLowend=lowend
                 red= int(255*lowend/self.cLowend)
                 for i in range(4,7):
-                    sample=pow(10,(int(rawSpectrum[i])+50)/(1.0*20))
+                    sample=pow(10,(int(rawspectrum[i])+50)/(1.0*20))
                     midrange+=sample*sample
                 if self.cMidrange < midrange:
                     self.cMidrange=midrange
                 green=int(255*midrange/self.cMidrange)
                 for i in range(8,30):
-                    sample=pow(10,(int(rawSpectrum[i])+50)/(1.0*20))
+                    sample=pow(10,(int(rawspectrum[i])+50)/(1.0*20))
                     highend+=sample*sample
                 if self.cHighend < highend:
                     self.cHighend=highend
                 blue=int(255*highend/self.cHighend)
                 payload={'r':red,'g':green,'b':blue,'s':1}
                 requests.get("http://127.0.0.1:5000/apply",payload)
-                print self.cLowend
             if GstPbutils.is_missing_plugin_message(msg):
                 self.on_missing_plugin(msg)
         elif msg.type == Gst.MessageType.STREAM_START:
